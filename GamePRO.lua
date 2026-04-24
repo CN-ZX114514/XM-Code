@@ -9,7 +9,7 @@ end
 local UniversalConfig = {
     Enabled = true, -- 是否启用通用脚本功能
     Script = {
-        url = "https://raw.githubusercontent.com/您的用户名/仓库名/main/universal_script.lua", -- 通用脚本URL
+        url = "https://raw.githubusercontent.com/CN-ZX114514/XM-Code/refs/heads/main/XM-Code/XM-Obsidian.luau", -- 通用脚本URL
         name = "通用功能脚本",
         timeout = 15, -- 超时时间(秒)
         retry = 1     -- 重试次数
