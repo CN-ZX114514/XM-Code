@@ -49,9 +49,6 @@ LeftGroupBox:AddSlider("MySlider", {
     Min = 0,
     Max = 100,
     Rounding = 0,
-    Callback = function(speed)
-    Humanoid.WalkSpeed:speed
-    end
 })
 LeftGroupBox:AddSlider("MySlider", {
     Text = "跳跃",
@@ -59,9 +56,6 @@ LeftGroupBox:AddSlider("MySlider", {
     Min = 0,
     Max = 100,
     Rounding = 0,
-    Callback = function(speed)
-    Humanoid.JumpHeight:speed
-    end
 })
 
 local RightGroupBox = Tab:AddRightGroupbox("后门")
