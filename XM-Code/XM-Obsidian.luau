@@ -5,6 +5,29 @@ local Window = Library:CreateWindow({
     Icon = 106760189301805,
     NotifySide = "Right",
 })
+-- Sets the draggable label visibility
+local DraggableLabel = Library:AddDraggableLabel("XM Code FREE")
+DraggableLabel:SetVisible(true)
+ 
+-- Example of dynamically-updating draggable label with common traits (fps and ping)
+local FrameTimer = tick()
+local FrameCounter = 0;
+local FPS = 60;
+ 
+local WatermarkConnection = game:GetService('RunService').RenderStepped:Connect(function()
+    FrameCounter += 1;
+ 
+    if (tick() - FrameTimer) >= 1 then
+        FPS = FrameCounter;
+        FrameTimer = tick();
+        FrameCounter = 0;
+    end;
+ 
+    DraggableLabel:SetText(('XM Code FREE | %s fps | %s ms | XM水印'):format(
+        math.floor(FPS),
+        math.floor(game:GetService('Stats').Network.ServerStatsItem['Data Ping']:GetValue())
+    ));
+end);
 local Tab = Window:AddTab({
     Name = "首页",
     Description = "BROBROBROBROBRO",
@@ -24,6 +47,12 @@ LeftGroupBox:AddVideo("MyVideo", {
     Looped = true,
     Playing = true,
     Volume = 0,
+})
+LeftGroupBox:AddImage("MyImage", {
+    Image = "rbxassetid://106760189301805",
+    Callback = function(image)
+        print("Image changed!", image)
+    end,
 })
 LeftGroupBox:AddDivider("这是我们的DC(有漏洞可以反馈)")
 LeftGroupBox:AddButton("复制(懒得写脚本直接弹出)", function()
@@ -47,15 +76,47 @@ LeftGroupBox:AddSlider("MySlider", {
     Text = "速度",
     Default = 16,
     Min = 0,
-    Max = 100,
+    Max = 1000,
     Rounding = 0,
+    Callback = function(value)
+    local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local function boostCharacter(character)
+	local humanoid = character:WaitForChild("Humanoid")
+	humanoid.WalkSpeed = (value)
+	humanoid.UseJumpPower = true
+end
+
+if player.Character then
+	boostCharacter(player.Character)
+end
+
+player.CharacterAdded:Connect(boostCharacter)
+    end
 })
 LeftGroupBox:AddSlider("MySlider", {
     Text = "跳跃",
     Default = 16,
     Min = 0,
-    Max = 100,
+    Max = 1000,
     Rounding = 0,
+    Callback = function(value)
+    local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local function boostCharacter(character)
+	local humanoid = character:WaitForChild("Humanoid")
+	humanoid.JumpPower = value
+	humanoid.UseJumpPower = true
+end
+
+if player.Character then
+	boostCharacter(player.Character)
+end
+
+player.CharacterAdded:Connect(boostCharacter)
+    end
 })
 
 local RightGroupBox = Tab:AddRightGroupbox("后门")
@@ -65,8 +126,53 @@ RightGroupBox:AddButton({
         loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-LALOL-Hub-Backdoor-158177"))()
     end
 })
+local LeftGroupBox = Tab:AddLeftGroupbox("整蛊[TEST可能会引起不适]", "wrench")
+LeftGroupBox:AddLabel("[<font color=\"rgb(255, 0, 0)\">TIP</font>]:<font color=\"rgb(116, 33, 44)\">有些可能会引发癫痫当你在使用时将同意此条信息</font>]")
+LeftGroupBox:AddButton({
+    Text = "地图彩色[光敏感患者不要使用]需要双击",
+    DoubleClick = true,
+    Risky = true,
+    Func = function()
+local Lighting = game:GetService("Lighting")
+local RunService = game:GetService("RunService")
+
+local running = true
+local hue = 0
+
+local function stop()
+	running = false
+end
+
+task.spawn(function()
+	while running do
+		pcall(function()
+			hue = (hue + 0.01) % 1
+			Lighting.Ambient = Color3.fromHSV(hue, 1, 1)
+			Lighting.OutdoorAmbient = Color3.fromHSV(hue, 1, 1)
+		end)
+		task.wait(0.01)
+	end
+end)
+end
+})
 local Tab = Window:AddTab({
     Name = "脚本中心",
     Description = "BROBROBROBROBRO",
     Icon = "wrench"
+}) 
+local Tab = Window:AddTab({
+    Name = "自定义",
+    Description = "BROBROBROBROBRO",
+    Icon = "wrench"
+})
+local LeftGroupBox = Tab:AddLeftGroupbox("普通", "wrench")
+LeftGroupBox:AddSlider("MySlider", {
+    Text = "圆角",
+    Default = 4,
+    Min = 0,
+    Max = 30,
+    Rounding = 0,
+    Callback = function(value)
+    Window:SetCornerRadius(value)
+    end
 })
