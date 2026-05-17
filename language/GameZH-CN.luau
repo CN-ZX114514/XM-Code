@@ -5,7 +5,7 @@
 local scriptMap = {
      [92664157270789] = {
          url = "https://raw.githubusercontent.com/CN-ZX114514/XM-Code/refs/heads/main/XM-Code/XM-Monster-race.luau",
-         name = "游戏1专用脚本",
+         name = "怪物竞赛脚本",
          timeout = 10,
          retry = 2
      }
