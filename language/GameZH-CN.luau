@@ -3,6 +3,12 @@
 
 -- ================ 1. 配置区域 ================
 local scriptMap = {
+     [92664157270789] = {
+         url = "https://raw.githubusercontent.com/.../game1.lua",
+         name = "游戏1专用脚本",
+         timeout = 10,
+         retry = 2
+     }
 }
 
 
