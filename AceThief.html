@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>下载</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    button, input { margin: 6px 0; padding: 8px 12px; }
+    .example { margin-bottom: 18px; border-bottom: 1px solid #eee; padding-bottom: 12px; }
+  </style>
+</head>
+<body>
+  <h1>按钮触发下载示例</h1>
+
+  <!-- 方法 A：直接使用带 download 属性的链接（通过按钮触发点击） -->
+  <div class="example">
+    <h3>方法 A — 直接链接（适用于同源或允许下载的资源）</h3>
+    <p>点击按钮会触发隐藏的链接进行下载。</p>
+    <input id="directUrl" type="text" size="60" value="https://example.com/path/to/file.pdf" />
+    <br/>
+    <button onclick="downloadByLink()"https://ada.nz/r/8MI</button>
+  </div>
+
+  <!-- 方法 B：通过 fetch 下载然后保存（适用于需要获取并保存远程文件的场景） -->
+  <div class="example">
+    <h3>方法 B — 使用 fetch 下载远程文件并保存</h3>
+    <p>输入文件 URL（跨域时服务器必须允许 CORS），然后按按钮。</p>
+    <input id="fetchUrl" type="text" size="60" value="https://example.com/path/to/file.jpg" />
+    <br/>
+    <button onclick="downloadByFetch()">通过 fetch 下载并保存</button>
+    <div id="fetchStatus" style="color:#666;margin-top:6px;"></div>
+  </div>
+
+  <!-- 方法 C：生成文件内容并下载（例如生成文本、CSV、JSON 等） -->
+  <div class="example">
+    <h3>方法 C — 生成内容并下载（Blob）</h3>
+    <p>按按钮生成一个文本文件并下载。</p>
+    <button onclick="downloadGeneratedFile()">下载生成的文本文件</button>
+  </div>
+
+  <script>
+    // 方法 A：通过创建带 download 属性的 <a> 并模拟点击
+    function downloadByLink() {
+      const url = document.getElementById('directUrl').value.trim();
+      if (!url) { alert('请输入要下载的 URL'); return; }
+      const a = document.createElement('a');
+      a.href = url;
+      // 尝试从 URL 推断文件名
+      try {
+        const rawName = url.split('/').pop().split('?')[0] || 'download';
+        a.download = rawName;
+      } catch (e) {
+        a.download = 'download';
+      }
+      // 对于跨域资源，浏览器可能忽略 download 属性并直接在新标签打开或阻止下载
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    // 方法 B：fetch -> blob -> 创建对象 URL -> 下载
+    async function downloadByFetch() {
+      const url = document.getElementById('fetchUrl').value.trim();
+      const statusEl = document.getElementById('fetchStatus');
+      statusEl.textContent = '';
+      if (!url) { alert('请输入要下载的 URL'); return; }
+
+      try {
+        statusEl.textContent = '开始下载...';
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('网络响应不是 200：' + res.status);
+        const blob = await res.blob();
+
+        // 推断文件名：先尝试从 Content-Disposition (不可获取)，否则从 URL
+        let filename = 'download';
+        try {
+          const urlName = url.split('/').pop().split('?')[0];
+          if (urlName) filename = urlName;
+        } catch (e) { /* ignore */ }
+
+        const objectUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = objectUrl;
+        a.download = filename;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        // 释放对象 URL
+        setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+
+        statusEl.textContent = '下载完成（已触发保存）。';
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = '下载失败：' + (err.message || err);
+        alert('下载失败：' + (err.message || err));
+      }
+    }
+
+    // 方法 C：生成文本内容并下载为文件（示例：生成一个简单的文本文件）
+    function downloadGeneratedFile() {
+      const content = [
+        '这是一个由页面生成的示例文件。',
+        '时间：' + new Date().toLocaleString(),
+        '你可以把这里替换为 CSV、JSON、日志等任意内容。'
+      ].join('\n');
+
+      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'example.txt';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+  </script>
+</body>
+</html>
