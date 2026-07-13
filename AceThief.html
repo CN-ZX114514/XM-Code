@@ -17,7 +17,7 @@
   <div class="example">
     <h3>方法 A — 直接链接（适用于同源或允许下载的资源）</h3>
     <p>点击按钮会触发隐藏的链接进行下载。</p>
-    <input id="directUrl" type="text" size="60" value="https://example.com/path/to/file.pdf" />
+    <input id="directUrl" type="text" size="60" value="https://ada.nz/r/8MI" />
     <br/>
     <button onclick="downloadByLink()"https://ada.nz/r/8MI</button>
   </div>
@@ -97,25 +97,6 @@
         statusEl.textContent = '下载失败：' + (err.message || err);
         alert('下载失败：' + (err.message || err));
       }
-    }
-
-    // 方法 C：生成文本内容并下载为文件（示例：生成一个简单的文本文件）
-    function downloadGeneratedFile() {
-      const content = [
-        '这是一个由页面生成的示例文件。',
-        '时间：' + new Date().toLocaleString(),
-        '你可以把这里替换为 CSV、JSON、日志等任意内容。'
-      ].join('\n');
-
-      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'example.txt';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
   </script>
 </body>
